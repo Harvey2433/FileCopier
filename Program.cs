@@ -302,4 +302,3 @@ string FormatSize(long bytes)
     return $"{size:0.##} {sizes[order]}";
 }
 #endregion
-Console.WriteLine();
