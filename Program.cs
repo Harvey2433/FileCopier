@@ -38,7 +38,10 @@ if (!File.Exists(fileListPath))
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine("错误：程序目录下未找到 file.txt");
     Console.ResetColor();
-    return 1;
+    Console.WriteLine("按下回车以退出程序");
+    while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+    Environment.Exit(0);
+    return 1;   
 }
 
 // 预计算总文件数
@@ -146,7 +149,7 @@ if (errorLogs.Count > 0)
     int errorNumber = 1;
     foreach (var error in errorLogs)
     {
-        var parts = error.Split(new[] { " :: " }, 2, StringSplitOptions.None);
+        var parts = error.Split(new[] { " :: " }, 2, StringSplitOptions.None);  
         var path = parts.Length > 0 ? parts[0].Replace("꞉", ":") : "未知路径";
         var reason = parts.Length > 1 ? parts[1] : "未知错误";
 
@@ -299,3 +302,4 @@ string FormatSize(long bytes)
     return $"{size:0.##} {sizes[order]}";
 }
 #endregion
+Console.WriteLine();
