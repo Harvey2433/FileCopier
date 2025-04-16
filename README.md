@@ -48,7 +48,7 @@ git clone https://github.com/yourrepo/file-copier.git
 cd file-copier
 
 ### 编译发布版本
-dotnet publish -c Release -o out
+dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
 
 ### 运行程序
 复制file.txt到输出目录
