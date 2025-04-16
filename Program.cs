@@ -138,14 +138,29 @@ Console.WriteLine($"通配符路径数量: {wildcardPathCount}");
 Console.WriteLine($"成功处理文件数: {successCount}");
 Console.WriteLine($"无效路径数量: {invalidPathCount}");
 Console.WriteLine($"失败操作统计: {errorLogs.Count}");
+if (errorLogs.Count == 0)
+{
+    Console.WriteLine();
+    Console.WriteLine("向未发现已捕获的异常,按下回车以退出");
+    while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+    Environment.Exit(0);
+
+}
+
+
 
 // 输出错误日志
 if (errorLogs.Count > 0)
 {
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("\n===== 错误日志 =====");
-    Console.WriteLine("以下错误发生在处理过程中：\n");
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("\n===== 异常统计 =====");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine($"共发现 {errorLogs.Count} 个错误发生在处理过程中：\n");
 
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("\n===== 错误日志 =====");
+    Console.WriteLine();
+    Console.ForegroundColor = ConsoleColor.Red;
     int errorNumber = 1;
     foreach (var error in errorLogs)
     {
@@ -159,7 +174,8 @@ if (errorLogs.Count > 0)
         Console.WriteLine(new string('─', 60));
     }
     Console.ResetColor();
-    Console.WriteLine("按下回车以退出程序");
+    Console.WriteLine();
+    Console.WriteLine("按下回车以退出");
     while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
     Environment.Exit(0);
 }
