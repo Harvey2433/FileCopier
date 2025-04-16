@@ -26,8 +26,7 @@
   - 错误路径高亮显示
 
 - **跨平台支持**
-  - Windows 10/11 原生优化
-  - 兼容Linux/macOS终端
+  - Windows 10/11 原生支持
   - 支持网络路径和本地路径
 
 ## 系统要求
@@ -43,9 +42,9 @@
 在file.txt中写入文件源路径,每一行为一个绝对路径,支持文件或目录通配符
 ## 编译并运行
 - #### 克隆仓库
-git clone https://github.com/yourrepo/file-copier.git
+git clone https://github.com/Harvey2433/FileCopier.git
 
-cd file-copier
+cd filecopier
 
 ### 编译发布版本
 dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
