@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 // 初始化统计变量
 int filesCopied = 0;
@@ -24,10 +26,7 @@ var errorLogs = new List<string>();
 // 配置控制台
 Console.Title = "文件复制工具 - 正在初始化 | by Maple Bamboo Team";
 Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("=== 文件复制程序准备就绪 ===");
-Console.ResetColor();
-Console.WriteLine("按回车键开始复制...");
-while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+Console.WriteLine("=== 文件复制程序准备就绪 ===\n");
 
 // 文件列表检测
 string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -49,11 +48,25 @@ var sourcePaths = File.ReadAllLines(fileListPath)
     .Where(p => !string.IsNullOrWhiteSpace(p))
     .ToArray();
 
-Console.Title = "正在扫描文件... | by Maple Bamboo Team";
+Console.Title = "文件复制工具 - 扫描中 | by Maple Bamboo Team";
+Console.ResetColor();
+Console.WriteLine("正在扫描文件...");
 totalFiles = CalculateTotalFiles(sourcePaths);
-Console.Title = $"文件复制工具 | 总文件: {totalFiles} | by Maple Bamboo Team";
+Console.Title = $"文件复制工具 - 准备就绪 | 总文件: {totalFiles} | by Maple Bamboo Team";
+if (totalFiles >= 10000)
+{
+    Console.WriteLine($"\n扫描完成,共 {totalFiles} 个文件");
+    Console.WriteLine("当前文件数量过多,键入回车键开始复制");
+    while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+}
+else {
+    Console.WriteLine($"\n扫描完成,共 {totalFiles} 个文件,即将开始复制...");
+    Thread.Sleep(2100);
+}
+
 
 // 开始处理
+Console.WriteLine("\n开始复制\n");
 stopwatch.Start();
 foreach (var originPath in sourcePaths)
 {
@@ -122,7 +135,7 @@ foreach (var originPath in sourcePaths)
 stopwatch.Stop();
 
 // 输出统计信息
-Console.Title = "文件复制工具 | by Maple Bamboo Team";
+Console.Title = "文件复制工具 - 运行结束 | by Maple Bamboo Team";
 Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("\n===== 复制结果 =====");
 Console.ResetColor();
@@ -136,8 +149,7 @@ Console.WriteLine("\n===== 处理统计 =====");
 Console.ResetColor();
 Console.WriteLine($"通配符路径数量: {wildcardPathCount}");
 Console.WriteLine($"成功处理文件数: {successCount}");
-Console.WriteLine($"无效路径数量: {invalidPathCount}");
-Console.WriteLine($"失败操作统计: {errorLogs.Count}");
+Console.WriteLine($"操作失败统计: {errorLogs.Count}");
 if (errorLogs.Count == 0)
 {
     Console.WriteLine();
@@ -214,12 +226,15 @@ void UpdateProgress()
     var eta = filesPerSec > 0 ? TimeSpan.FromSeconds(remaining / filesPerSec) : TimeSpan.Zero;
 
     Console.Title = string.Format(
-        "文件复制工具 | 进度: {0:0.0}% | 已处理: {1}/{2} | 速度: {3:0}个/s | 剩余: {4:mm\\:ss} | by Maple Bamboo Team",
+        "文件复制工具 - 正在处理 | 进度:{0:0.0}% | 已处理:{1}/{2} | 速度:{3:0}个/s | 剩余:{4:mm\\:ss} | 已使用的空间:{5} | 成功:{6} 失败{7}  | by Maple Bamboo Team",
         (double)processedFiles / totalFiles * 100,
         processedFiles,
         totalFiles,
         filesPerSec,
-        eta
+        eta,
+        FormatSize(totalSize),
+        successCount,
+        errorLogs.Count
     );
 
     progressWatch.Restart();
