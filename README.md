@@ -19,7 +19,6 @@
 - **资源优化**
   	- 内存占用控制 (<200MB处理5万文件)
   - 分批处理机制
-  - 自动垃圾回收
 
 - **错误管理**
   - 结构化错误日志
@@ -43,7 +42,6 @@
 ## 编译并运行
 - #### 克隆仓库
 git clone https://github.com/Harvey2433/FileCopier.git
-
 cd filecopier
 
 ### 编译发布版本
